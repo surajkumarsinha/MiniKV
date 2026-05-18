@@ -2,9 +2,9 @@ package storage.impl;
 
 import storage.DiskTask;
 import storage.FileChannelManager;
+import storage.PathGenerator;
 
 import java.io.IOException;
-import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -13,8 +13,8 @@ public final class DefaultFileChannelManager implements FileChannelManager {
 	private FileChannel currentChannel;
 	private Path currentFilePath;
 
-	public DefaultFileChannelManager(String walDirectoryPath) throws IOException {
-		initializeChannel(Path.of(URI.create(walDirectoryPath)));
+	public DefaultFileChannelManager(PathGenerator pathGenerator) throws IOException {
+		initializeChannel(pathGenerator.getPath());
 	}
 
 	void initializeChannel(Path path) throws IOException {

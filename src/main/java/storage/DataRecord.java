@@ -10,5 +10,26 @@ public final class DataRecord {
 		this.key = key;
 		this.value = value;
 		this.timestampEpochMillis = timestampEpochMillis;
+		this.isDeleted = false;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public long getTimestampEpochMillis() {
+		return timestampEpochMillis;
+	}
+
+	public boolean isDeleted() {
+		return isDeleted;
+	}
+
+	public void setDeleted(boolean deleted) {
+		isDeleted = deleted;
 	}
 }
