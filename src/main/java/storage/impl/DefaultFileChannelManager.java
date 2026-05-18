@@ -1,6 +1,6 @@
 package storage.impl;
 
-import storage.DiskFlush;
+import storage.DiskTask;
 import storage.FileChannelManager;
 
 import java.io.IOException;
@@ -30,7 +30,7 @@ public final class DefaultFileChannelManager implements FileChannelManager {
 	}
 
 	@Override
-	public void writeTo(DiskFlush diskFlush) throws IOException {
-		diskFlush.flush(currentChannel, currentFilePath);
+	public <T> T execute(DiskTask<T> diskTask) throws IOException {
+		return diskTask.execute(currentChannel, currentFilePath);
 	}
 }
