@@ -3,19 +3,29 @@ package application;
 import engine.KeyDirectory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import storage.DataRecord;
 import storage.RecordMetadata;
+import storage.WALReader;
 import storage.WALWriter;
 
+import javax.xml.crypto.Data;
 import java.io.IOException;
+import java.util.NoSuchElementException;
 
 public class KVStoreImpl implements KVStore {
     private static final Logger logger = LogManager.getLogger(KVStoreImpl.class);
 
     private final WALWriter walWriter;
+    private final WALReader walReader;
     private final KeyDirectory keyDirectory;
 
-    public KVStoreImpl(WALWriter walWriter, KeyDirectory keyDirectory) {
+    public KVStoreImpl(
+        WALWriter walWriter,
+        WALReader walReader,
+        KeyDirectory keyDirectory
+    ) {
         this.walWriter = walWriter;
+        this.walReader = walReader;
         this.keyDirectory = keyDirectory;
     }
 
@@ -36,7 +46,15 @@ public class KVStoreImpl implements KVStore {
 
     @Override
     public String get(String key) {
-        throw new UnsupportedOperationException("Method yet to be implemented");
+        try {
+            RecordMetadata recordMetadata = keyDirectory.get(key);
+            if (recordMetadata == null) throw new NoSuchElementException("No value found against the key");
+            DataRecord dataRecord = walReader.read(recordMetadata);
+            return dataRecord.getValue();
+        } catch (Exception e) {
+            logger.error("Failed to get record for key: " + key, e);
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

@@ -12,4 +12,8 @@ public final class InMemoryKeyDirectory implements KeyDirectory {
     public void add(String key, RecordMetadata recordMetadata) {
         index.put(key, recordMetadata);
     }
+
+    public RecordMetadata get(String key) {
+        return index.get(key);
+    }
 }
